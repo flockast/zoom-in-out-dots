@@ -2,19 +2,17 @@ import Canvas from './Canvas'
 import Dot from './Dot'
 import Mouse from './Mouse'
 
-const { canvas, ctx, clearCanvas } = Canvas({
-  element: 'canvas',
+const { canvas, ctx, clear, width, height } = Canvas({
   defaultBackground: '#1d1e21',
-  fullScreen: true
+  full: true
 })
 
 const mouse = new Mouse(canvas)
-
-const distanceCell = 20
+const distanceCell = 30
 const dots = []
 
-for (let y = 0; y <= canvas.height / 2; y += distanceCell) {
-  for (let x = 0; x <= canvas.width / 2; x += distanceCell) {
+for (let y = 0; y <= height; y += distanceCell) {
+  for (let x = 0; x <= width; x += distanceCell) {
     dots.push(new Dot(x, y))
   }
 }
@@ -32,7 +30,7 @@ function update () {
 }
 
 const raf = () => {
-  clearCanvas()
+  clear()
   draw()
   update()
   requestAnimationFrame(raf)

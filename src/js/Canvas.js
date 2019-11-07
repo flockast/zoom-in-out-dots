@@ -1,27 +1,36 @@
 import scaleCanvas from './scaleCanvas'
 
-function Canvas ({ element, defaultBackground = 'white', fullScreen = false }) {
-  const canvas = document.querySelector(element)
+function Canvas ({ element, defaultBackground = 'white', full, width = 500, height = 500 }) {
+  let canvas = document.querySelector(element)
+  if (!canvas) {
+    canvas = document.createElement('canvas')
+    document.body.appendChild(canvas)
+  }
   const ctx = canvas.getContext('2d')
-  const canvasFullScreen = () => {
-    scaleCanvas(canvas, ctx, window.innerWidth, window.innerHeight)
+  if (full) {
+    width = window.innerWidth
+    height = window.innerHeight
+    window.addEventListener('resize', () => {
+      const width = window.innerWidth
+      const height = window.innerHeight
+      scaleCanvas(canvas, ctx, width, height)
+      clear(width, height)
+    })
   }
-  const clearCanvas = () => {
-    ctx.fillStyle = defaultBackground
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-  }
+  scaleCanvas(canvas, ctx, width, height)
 
-  if (fullScreen) {
-    window.onresize = function () {
-      canvasFullScreen()
-    }
-    canvasFullScreen()
+  function clear (width, height) {
+    ctx.fillStyle = defaultBackground
+    ctx.fillRect(0, 0, width, height)
   }
+  clear(width, height)
 
   return {
     canvas,
     ctx,
-    clearCanvas
+    width,
+    height,
+    clear
   }
 }
 
