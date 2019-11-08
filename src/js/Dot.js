@@ -7,7 +7,7 @@ class Dot {
     this.maxRadius = 12
     this.minRadius = .1
     this.radius = this.maxRadius
-    this._fillStyle = '#101113'
+    this._fillStyle = '#313234'
     this.fillStyle = this._fillStyle
   }
 
@@ -35,7 +35,7 @@ class Dot {
     if (this.radius < this.maxRadius) {
       this.radius *= 1.04
 			if (this.fillStyle === this._fillStyle) {
-				this.fillStyle = `hsl(${getRandomRange(180, 200)}, 80%, 30%)`;
+				this.fillStyle = `hsl(${getRandomRange(180, 200)}, 80%, 38%)`;
 			}
     }
   }
