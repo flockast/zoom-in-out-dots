@@ -19,13 +19,12 @@ window.addEventListener('resize', () => {
 // start data
 const soundPop = new Audio(soundPopUrl)
 const mouse = new Mouse(art.canvas)
-let distanceCell = 0
+let distanceCell = 40
 let dots = []
 
 // fill start data
 function initial (width, height) {
   dots = []
-  distanceCell = innerWidth * 2.6 / 100
   for (let y = 0; y <= height; y += distanceCell) {
     for (let x = 0; x <= width; x += distanceCell) {
       dots.push(new Dot(x, y))

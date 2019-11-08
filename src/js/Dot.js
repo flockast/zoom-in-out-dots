@@ -1,11 +1,14 @@
+import { getRandomRange } from "./helpers";
+
 class Dot {
   constructor (x = 0, y = 0) {
     this.x = x
     this.y = y
     this.maxRadius = 12
-    this.minRadius = 2
+    this.minRadius = .1
     this.radius = this.maxRadius
-    this.fillStyle = '#2d2e31'
+    this._fillStyle = '#101113'
+    this.fillStyle = this._fillStyle
   }
 
   draw (ctx) {
@@ -29,14 +32,17 @@ class Dot {
   }
 
   zoomIn () {
-    if (this.radius <= this.maxRadius) {
+    if (this.radius < this.maxRadius) {
       this.radius *= 1.04
+			if (this.fillStyle === this._fillStyle) {
+				this.fillStyle = `hsl(${getRandomRange(180, 200)}, 80%, 30%)`;
+			}
     }
   }
 
   zoomOut (soundPop) {
-    if (this.radius >= this.minRadius) {
-      this.radius *= 0.01
+    if (this.radius > this.minRadius) {
+      this.radius = this.minRadius;
       soundPop.play()
     }
   }
