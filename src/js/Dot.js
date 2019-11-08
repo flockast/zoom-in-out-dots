@@ -4,7 +4,7 @@ class Dot {
     this.y = y
     this.maxRadius = 12
     this.minRadius = 2
-    this.radius = this.minRadius
+    this.radius = this.maxRadius
     this.fillStyle = '#2d2e31'
   }
 
@@ -15,28 +15,29 @@ class Dot {
     ctx.fill()
   }
 
-  update (x, y, radius) {
+  update (x, y, radius, soundPop) {
     const a = x - this.x
     const b = y - this.y
     const c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))
     const diff = (radius + this.radius) - c
 
     if (diff >= 0) {
-      this.zoomIn()
+      this.zoomOut(soundPop)
     } else {
-      this.zoomOut()
+      this.zoomIn()
     }
   }
 
   zoomIn () {
     if (this.radius <= this.maxRadius) {
-      this.radius += 0.4
+      this.radius *= 1.04
     }
   }
 
-  zoomOut () {
+  zoomOut (soundPop) {
     if (this.radius >= this.minRadius) {
-      this.radius -= 0.02
+      this.radius *= 0.01
+      soundPop.play()
     }
   }
 }

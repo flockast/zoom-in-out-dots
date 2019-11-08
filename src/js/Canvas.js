@@ -1,36 +1,63 @@
-import scaleCanvas from './scaleCanvas'
-
-function Canvas ({ element, defaultBackground = 'white', full, width = 500, height = 500 }) {
-  let canvas = document.querySelector(element)
-  if (!canvas) {
-    canvas = document.createElement('canvas')
-    document.body.appendChild(canvas)
+class Canvas {
+  constructor ({ element, background, width, height }) {
+    let canvas = document.querySelector(element)
+    if (canvas == null) {
+      canvas = document.createElement('canvas')
+      document.body.appendChild(canvas)
+    }
+    this.canvas = canvas
+    this.ctx = this.canvas.getContext('2d')
+    this.background = background || 'white'
+    if (width && height) {
+      this.setSize(width, height)
+    }
   }
-  const ctx = canvas.getContext('2d')
-  if (full) {
-    width = window.innerWidth
-    height = window.innerHeight
-    window.addEventListener('resize', () => {
-      const width = window.innerWidth
-      const height = window.innerHeight
-      scaleCanvas(canvas, ctx, width, height)
-      clear(width, height)
-    })
-  }
-  scaleCanvas(canvas, ctx, width, height)
 
-  function clear (width, height) {
-    ctx.fillStyle = defaultBackground
-    ctx.fillRect(0, 0, width, height)
+  setSize (width, height) {
+    this.width = width
+    this.height = height
+    this.scaleCanvas()
   }
-  clear(width, height)
 
-  return {
-    canvas,
-    ctx,
-    width,
-    height,
-    clear
+  scaleCanvas () {
+    // assume the device pixel ratio is 1 if the browser doesn't specify it
+    const devicePixelRatio = window.devicePixelRatio || 1
+
+    // determine the 'backing store ratio' of the canvas context
+    const backingStoreRatio = (
+      this.ctx.webkitBackingStorePixelRatio ||
+      this.ctx.mozBackingStorePixelRatio ||
+      this.ctx.msBackingStorePixelRatio ||
+      this.ctx.oBackingStorePixelRatio ||
+      this.ctx.backingStorePixelRatio || 1
+    )
+
+    // determine the actual ratio we want to draw at
+    const ratio = devicePixelRatio / backingStoreRatio
+
+    if (devicePixelRatio !== backingStoreRatio) {
+      // set the 'real' canvas size to the higher width/height
+      this.canvas.width = this.width * ratio
+      this.canvas.height = this.height * ratio
+
+      // ...then scale it back down with CSS
+      this.canvas.style.width = this.width + 'px'
+      this.canvas.style.height = this.height + 'px'
+    } else {
+      // this is a normal 1:1 device; just scale it simply
+      this.canvas.width = this.width
+      this.canvas.height = this.height
+      this.canvas.style.width = ''
+      this.canvas.style.height = ''
+    }
+
+    // scale the drawing context so everything will work at the higher ratio
+    this.ctx.scale(ratio, ratio)
+  }
+
+  clear () {
+    this.ctx.fillStyle = this.background
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
   }
 }
 
