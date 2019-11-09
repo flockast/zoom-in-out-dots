@@ -1,11 +1,11 @@
-import { getRandomRange } from "./helpers";
+import { getRandomRange } from './helpers'
 
 class Dot {
   constructor (x = 0, y = 0) {
     this.x = x
     this.y = y
     this.maxRadius = 12
-    this.minRadius = .1
+    this.minRadius = 0.1
     this.radius = this.maxRadius
     this._fillStyle = '#313234'
     this.fillStyle = this._fillStyle
@@ -34,15 +34,15 @@ class Dot {
   zoomIn () {
     if (this.radius < this.maxRadius) {
       this.radius *= 1.04
-			if (this.fillStyle === this._fillStyle) {
-				this.fillStyle = `hsl(${getRandomRange(180, 200)}, 80%, 38%)`;
-			}
+      if (this.fillStyle === this._fillStyle) {
+        this.fillStyle = `hsl(${getRandomRange(180, 200)}, 80%, 38%)`
+      }
     }
   }
 
   zoomOut (soundPop) {
     if (this.radius > this.minRadius) {
-      this.radius = this.minRadius;
+      this.radius = this.minRadius
       soundPop.play()
     }
   }
